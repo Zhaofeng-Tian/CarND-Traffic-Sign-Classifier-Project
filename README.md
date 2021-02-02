@@ -73,213 +73,62 @@ The goals / steps of this project are the following:
 5. Featuremap visualisation, Featuremap for all convolution layaer and pooling layer plotted.
 
 ---
-### Writeup / README
-
-#### 1. Provide a Writeup / README that includes all the rubric points and how you addressed each one. You can submit your writeup as markdown or pdf. You can use this template as a guide for writing the report. The submission includes the project code.
-
-
-
-### Data Set Summary & Exploration
-
-#### 1. Provide a basic summary of the data set. In the code, the analysis should be done using python, numpy and/or pandas methods rather than hardcoding results manually.
-
-I used the numpy library to calculate summary statistics of the traffic signs data set.
-Initial training data charecteristics is shown below:
-
+# 1. Data Exploration
+## Dataset Summary
+The dataset includes 43 classes of traffics signs and each image has a 32 * 32 size.
 * The size of training set is 34799
 * The size of test set is 12630
 * The shape of a traffic sign image is (32, 32, 3)
 * The number of unique classes/labels in the data set is 43
-
-#### 2. Include an exploratory visualization of the dataset.
-
-Here is an exploratory visualization of the data set. Below images shows the German Traffic Signs and its class. Image plot showing the number of images per class.
-
-![list](images/list.png)
-
-Below image shows the trainng data distributution per class
-
-![class](images/number.png)
-
-
-### Design and Test a Model Architecture
-
-#### 1. Describe how you preprocessed the image data. What techniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, and provide example images of the additional data. Then describe the characteristics of the augmented training set like number of images in the set, number of images for each class, etc.)
-
-* As a first step, To generalise model better, I have decide to increase number of images and adding verity of image quality like, rotated image(As like seeing image from angular direction), translated image, share image, to achive this I have used transform_image function
-which operates on image to give Image Rotation, Translaton and Share.
-
-Here is an example of a traffic sign image before and after transform_image.
-
-![30](images/30.png) ![30](images/wrap.png)
-
-
-* As a Second step in image processing, I decided to convert the images to grayscale because we are expecting network to detect traffic sign by geometry and shape and not by color, so to avoid wrong learning of network(i.e. sign detection by color), I have converted images into grayscale.
-
-* As a last step, I normalized the image data because its always better to have image data with zero mean and equal variance
-if its not case then it will be difficult for optimizer to find solution, well conditioned data i.e. zero mean and equal variance makes it lot easier to find optimum solution, image data comes in 0 to 255 pixle value, to normalize it I have used (X-Xmean)/std.
-
-Here is an example of an transform image and image after grayscale and normalization:
-
-![alt text](images/wrap.png)![alt text](images/wrap2.png)
-
-The difference between the original data set and the augmented data set is the following ...
-
-**Existing data
-
-* Number of training examples = 34799
-* Number of Validation examples = 4410
-* Number of testing examples = 12630
-
-**Data after Augmentation
-
-* Number of training examples after image augment = 86430
-* Number of testing examples after image augment = 12630
-
-#### 2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
-
-My final model consisted of the following layers:
-
-| Layer                                  |     Description                                                                  |
-|:--------------------------:|:------------------------------------------------------:|
-| Input                                  | 32x32x1 Grayscale image                                          |
-| Convolution_1 5x5       | 1x1 stride, VALID padding, outputs 28X28X6                |
-| RELU                                  |                                                                                              |
-|Dropout                             |Keep probability = 0.7                       |
-| Max pooling                    | 2x2 stride,  outputs 14x14x6                                    |
-| Convolution_2 5x5       | 1x1 stride, VALID padding, outputs 10x10x16   |
-| RELU                                  |                                                                                              |
-| Max pooling                    | 2x2 stride,  outputs 5x5x16                                       |
-| Fully connected_0        | Output = 400.                                                                 |
-|Dropout                             |Keep probability – 0.6                                                 |
-| Fully connected_1        | Output = 120.                                                                 |
-| RELU                                  |                                                                                              |
-| Fully connected_2        | Output = 84.                                                                   |
-| RELU                                  |                                                                                              |
-|Dropout                             |Keep probability = 0.6                                                 |
-| Fully connected_3        | Output = 43.                                                                   |
- 
-
-
-#### 3. Describe how you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
-
-To train the model, Initially I used same Lenet Modle as given in class tutorial, but validation accuracy of model was very low so To optimize it I have tried various approach to increase accuracy like adding droupout at fully connected layer, also changing keep probability value, additon of dropout at convolution 1 layer with different keep probability also ADAM optimizer gives better accuracy than SGD optimizer.
-
-#### 4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
-
-To acehive better validation accuracy I worked out on various hyperparameter like learning rate, epoch's, dropout keep probability and its position in network.
-
-#### Following parameter value gives best result for my network:
-
-* Learning Rate = 0.0001
-* Epoch = 100
-* batch Size = 70
-* Dropout at FC 0 layer = 0.6
-* Dropout at FC 2 layer = 0.6
-* Dropout at Conv 1 layer = 0.7
-
-#### Learning from various experiments: 
-
-* Learning rate between 0.001 and 0.0009 gives better accuracy.
-* Epoch value not fixed, it should be optimized based on model and various experiments.
-* Batch Size - Higher batch size train model faster but need higher computation memory. Lower batch size takes more time to train model but works on lower computation power.
-* 
-
-
-The code for calculating the accuracy of the model is located in the 21th and 23rd cell of the Ipython notebook.
-
-### My final model results are:
-
-* training set accuracy of ----: 99.9%
-* validation set accuracy of --: 99.6%
-* test set accuracy of---------: 92.3%
-
-Below graph shows validation accuracy over number of Epoch's.
-
- ![alt text](images/acc.png) 
-
-If an iterative approach was chosen:
-
-#### What was the first architecture that was tried and why was it chosen?
-
-   * I  have used LeNet architecture as suggested in class tutorial.
-   
-#### What were some problems with the initial architecture?
-
-   * While working on LeNet architecture I have notice that accuracy of model not yielding enough due to image data was not pre-processed also the model overfitting data which result in poor validationn accuracy.
-   
-#### How was the architecture adjusted and why was it adjusted? Typical adjustments could include choosing a different model architecture, adding or taking away layers (pooling, dropout, convolution, etc), using an activation function or changing the activation function. One common justification for adjusting an architecture would be due to overfitting or underfitting. A high accuracy on the training set but low accuracy on the validation set indicates over fitting; a low accuracy on both sets indicates under fitting.
-
-  * Initial model was overfitting data and not yielding required accuracy for validation data set, so to avoid this we have introduced dropout at first convolution layer, at first Fully connected layer and at last Fully connected layer, keep probability for Fully conected layer was same i.e. 0.6, but for first convolutional layer it was quite high 0.7 to avoid underfitting.
-  
-#### Which parameters were tuned? How were they adjusted and why?
-
-  * Learning Rate, Batch Size, Epoch, Keep probability for dropout.
-   * Learning Rate:- Higher Learning rate train model faster but stagnant earlier than acheving its full potential, whereas for lower learning rate model train slower but it achieves lowest possible loss for that model. in our model learning rate of 0.0009 yields better results.
-   * Batch Size:- Since we can not train whole model at once due to computation power limitation, so we split model in batches, calculate all parameter for each batches and cascade it to top level for complete model, ats again on model size we can deside batch size, in our model Batch size is 128.
-   * Keep Probability:- To avoid overfitting in model we have to introduced dropout at different layer, In our model I have added dropout at Conv1 layer, at first fully connected layer, and at last fully connected layer but with different keep probability, like at earlier layer it is higher 0.7 in our case and at later layer it is 0.6.
-  
-   
-
-### Test a Model on New Images
-
-### 1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.
-
-Here are five German traffic signs that I found on the web:
-
-  ![alt text](images/sings.png) 
-
-
-The first image might be difficult to classify because image downloaded from web was not as per required size i.e 32x32x1 which is required size for Network, so we have converted image size and preprocessed it same as training data preprocessing.
-
-#### 2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
-
-Here are the results of the prediction:
-
-| Image                                                |     Prediction                                |
-|:----------------------------------------------------:|:---------------------------------------------:|
-|Turn Left                                             | Turn Left                                     |
-| Priority Road                                        | Priority Road                                 |
-| 30 Speed Limit                                       | 30 Speed Lmit                                 |
-| Stop                                                 | Stop                                          |
-| Road Work                                            | Road Work                                     |
-| Right-of-way at the next Intersection                | Right-of-way at the next Intersection         |
-|No Vehicle                                            | No Vehicle                                    |
-|General Caution                                       | General Caution                               |
-|Go Straight or Left                                   | Go Straight or Left                           |
-|Bumpy Road                                            | Bumpy Road                                    |
-|Keep Right                                            | Keep Right                                    |
-
-
-![alt text](images/prediction.png)
-
-Figure showing Top 3 Probabilities for detected images.
-
-The model was able to correctly guess 8 of the 8 traffic signs, which gives an accuracy of 100%. 
-
-#### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
-
-The code for making predictions on my final model is located in the 11th cell of the Ipython notebook.
-
-The top five soft max probabilities is:
-
-| Probability                                                           |     Prediction                                       |
-|:---------------------------------------------------------------------:|:----------------------------------------------------:|
-|100%                                             | Turn Left                                     |
-| 100%                                         | Priority Road                                 |
-| 99%                                         | 30 Speed Lmit                                 |
-|100%                                                  | Stop                                          |
-| 57%                                            | Road Work                                     |
-| 100%                  | Right-of-way at the next Intersection         |
-|54%                                           | No Vehicle                                    |
-|100%                                        | General Caution                               |
-|100%                                     | Go Straight or Left                           |
-|100%                                              | Bumpy Road                                    |
-|100%                                            | Keep Right                                    |
-
-![alt text](images/softmax.png)
-
-Figure showing sofmax probability.
-
-
-
+## Exploratory Visualization
+This study extract all the images from the three original .p files, and saved as rgb images in the file. The codes are shown below.
+
+![extract](images/extract.png)
+
+An example of label 1 images in the train file. As you can see, all the images are converted from .p files to .jpg images.
+
+![train](images/example.png)
+
+# 2. Design and Test a Model Architecture
+## Model Architecture
+The submission provides details of the characteristics and qualities of the architecture, including the type of model used, the number of layers, and the size of each layer. Visualizations emphasizing particular qualities of the architecture are encouraged.
+The model architecture is shown below:
+![model structure](images/model1.png)
+
+- I firstly use two convolution layers after the input layers and then added a maxpooling layer. 
+- Then I repeat this operation which add more two convolution layers and a maxpooling layer.
+- Next I use flatten layer to expand the results of convolutions.
+- A full connected layer with an activation function of "relu", a BN and a dropout.
+- Finally, a full connected layer with softmax funtion. 
+
+## Preprocessing
+The submission describes the preprocessing techniques used and why these techniques were chosen.
+I choose normalizing the image from [0, 255] to [0, 1] and augment data using the fliping function. The reason is because this method are very simple, you do not need to convert the images into gray images and using fliping could generate more images very conveniently. Addtionally, I use one-hot operation on the labels.
+![preprocessing](images/pre.png)
+## Model Training
+The submission describes how the model was trained by discussing what optimizer was used, batch size, number of epochs and values for hyperparameters.
+- Learning rate: 0.009
+- Batch size: 100
+- Epochs: 40
+- Optimizer: Adam
+After training, the accuracy of train category can exceed 99%. The loss and accuracy can be ploted as follows. 
+
+![loss](images/loss.png)![acc](images/acc.png)
+## Solution Approach
+The submission describes the approach to finding a solution. Accuracy on the validation set is 0.93 or greater.
+I tried several times to tune the batch size, epoch and learning rate, finally, I choode 0.009 for the learning rate, 100 for batch size, 40 for epoch. Then the accuracy on the validation set could reach 96%.
+
+# 3. Test a Model on New Images
+## Acquiring New Images
+The submission includes five new German Traffic signs found on the web, and the images are visualized. Discussion is made as to particular qualities of the images or traffic signs in the images that are of interest, such as whether they would be difficult for the model to classify.
+I acquired 14 images online. Please check them in the jupyter notebook.
+
+![images](images/sings.png)
+## Performance on New Images
+The submission documents the performance of the model when tested on the captured images. The performance on the new images is compared to the accuracy results of the test set.
+The prediction results can be obtained here:
+![prediction](images/pred.png)
+The accuracy of every image prediction is above 88% and the accuracy of 11 images is 100%. The results are pretty good.
+## Model Certainty - Softmax Probabilities
+The top five softmax probabilities of the predictions on the captured images are outputted. The submission discusses how certain or uncertain the model is of its predictions. The softmax prbabilities are shown here:
+![softmax](images/sm.png)
