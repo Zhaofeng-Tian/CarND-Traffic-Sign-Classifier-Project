@@ -76,10 +76,10 @@ The goals / steps of this project are the following:
 # 1. Data Exploration
 ## Dataset Summary
 The dataset includes 43 classes of traffics signs and each image has a 32 * 32 size.
-* The size of training set is 34799
-* The size of test set is 12630
-* The shape of a traffic sign image is (32, 32, 3)
-* The number of unique classes/labels in the data set is 43
+* The size of train dataset: 34799
+* The size of test dataset: 12630
+* The shape of a traffic sign image: (32, 32, 3)
+* The number of labels of the data set: 43 types
 ## Exploratory Visualization
 This study extract all the images from the three original .p files, and saved as rgb images in the file. The codes are shown below.
 
